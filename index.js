@@ -11,6 +11,7 @@ let userAttempts = 0
 let gameWon = false
 let fiveLetterWords = []
 let CurrentKeySelected;
+let enterClicked = 0;
 
 
 // Commonly used variables are stored at the top of the document so the program doesnt have to find each element every time you want it
@@ -28,11 +29,13 @@ keyBoardButtons.forEach(button => {
   button.addEventListener('click', function() {
     let keyboardInputIsLetter = isLetter(button.textContent)
 
+    enterClicked++
+
     if (keyboardInputIsLetter === true && currentLetter != ANSWER_LENGTH){
       enteredWord[currentLetter] = button.textContent
       document.getElementById(currentLetter).innerText = button.textContent
       currentLetter += 1
-   } else if (button.textContent === "Enter" && currentLetter === ANSWER_LENGTH && CurrentKeySelected != "Enter") {
+   } else if (button.textContent === "Enter" && currentLetter === ANSWER_LENGTH && CurrentKeySelected != "Enter" && enterClick <= 1) {
       compareWords(enteredWord)
    } else if (button.textContent === "Back") {
     currentLetter--
@@ -90,6 +93,7 @@ function gameLose() {
 //COMPARING WORDS
 async function compareWords(usersWord) {
   let enteredWordString = usersWord.join('') 
+  enterClicked = 0
 
   
   let res = await fetch("https://words.dev-apis.com/validate-word", {
