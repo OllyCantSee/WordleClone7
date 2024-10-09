@@ -23,6 +23,7 @@ body {
     width: min-content;
     height: min-content;
     margin-bottom: 3rem;
+    margin-top: 5rem;
 }
 
 .letter {
@@ -39,6 +40,7 @@ body {
     height: 65px;
     font-size: 35px;
 }
+
 
 .letter1:focus {
     outline: none;
@@ -118,23 +120,23 @@ body {
 }
 
 .error-message {
+    transition: all 1.5s ease;
+    position: absolute;
+    top: 133px;
+    border-radius: 20px;
     background: white;
-    padding: 5px;
-    border-radius: 10px;
-    margin-top: 2rem;
     opacity: 0;
-    transition: all 0.5s ease;
-    font-size: 1.3rem;
+    padding: 0.1rem 1.2rem;
 }
 
 .congrats {
     transition: all 1.5s ease;
     position: absolute;
-    border-radius: 10px;
+    top: 133px;
+    border-radius: 20px;
     background: white;
     opacity: 0;
-    width: 320px;
-    height: 90px;
+    padding: 0.1rem 1.2rem;
 }
 
 .congratsh1 {
@@ -143,10 +145,6 @@ body {
     justify-content: center;
     text-align: center;
     font-size: 1.4rem;
-}
-
-.congratsh1 {
-    font-size: 2rem;
 }
 
 .visible {
@@ -179,9 +177,13 @@ body {
     font-size: 1.2rem;
     background: #818384 ;
     height: 60px;
-    width: 43px;
+    width: 60px;
     border: none;
     border-radius: 5px;
+    transition: all 0.3s ease;
+}
+.kletter:hover {
+    scale: 1.05;
 }
 
 .enter, .back {
@@ -209,7 +211,7 @@ body {
 
 @media only screen and (max-width: 1000px) {
     .kletter {
-        width: 26px;
+        width: 36px;
     }
     .enter, .back {
         width: 50px;
@@ -223,6 +225,10 @@ body {
 @media only screen and (max-width: 500px) {
     .kletter {
         width: 26px;
+    }
+    .letter {
+        width: 60px;
+        height: 60px;
     }
     .enter, .back {
         width: 50px;
