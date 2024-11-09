@@ -14,6 +14,10 @@ body {
     justify-content: center;
     flex-direction: column;
     font-family: 'Righteous', sans-serif;
+    background-image: url(BackgroundImage.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
 }
 
 .wordle-grid {
@@ -37,6 +41,7 @@ body {
     align-items: center;
     justify-content: center;
     border: 2px solid #3a3a3a;
+    background: #121213;
     width: 65px;
     height: 65px;
     font-size: 35px;
@@ -56,6 +61,7 @@ body {
     display: flex;
     padding: 0px 20px;
     border-bottom: 0.1rem solid #3a3a3c;
+    background: #121213;
 }
 
 .burger-icon {
