@@ -23,7 +23,7 @@ body {
     width: min-content;
     height: min-content;
     margin-bottom: 3rem;
-    margin-top: 5rem;
+    margin-top: 2rem;
 }
 
 .letter {
@@ -246,28 +246,31 @@ body {
 @media only screen and (max-width: 400px) {
     .kletter {
         font-size: 1rem;
-        flex: 2; /* Make the keys take equal space */
+        flex: 2;
+        border-radius: 3px;
     }
     .enter, .back {
         font-size: 0.6rem;
-        flex: 4; /* Ensure these buttons also scale properly */
+        flex: 4; 
      }
     
     .keyboard {
         width: 100%;
         display: flex;
-        flex-direction: column; /* Arrange rows vertically */
+        flex-direction: column;
         align-items: center;
         padding: 0.3rem 0.3rem;
+        gap: 2px;
     }
 
     .row1, .row2, .row3 {
         width: 100%;
         display: flex;
-        gap: 5px;
+        gap: 2px;
+        margin-top: 1px;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap; /* Allow rows to wrap */
+        flex-wrap: wrap; 
     }
 
     .letter {
