@@ -258,7 +258,7 @@ body {
         display: flex;
         flex-direction: column; /* Arrange rows vertically */
         align-items: center;
-        padding: 0rem 0.3rem;
+        padding: 0.3rem 0.3rem;
     }
 
     .row1, .row2, .row3 {
