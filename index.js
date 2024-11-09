@@ -1,25 +1,82 @@
-const ANSWER_LENGTH = 5
-let inputIsLetter
-let currentLetter = 0
-let enteredWord = ["", "", "", "", ""]
+const ANSWER_LENGTH = 5;
+let inputIsLetter;
+let currentLetter = 0;
+let enteredWord = ["", "", "", "", ""];
 let todaysWord = ""
 let todaysWordArray = "";
-let lettersGuessedCorrectly = []
-let closeLettersGuesses = []
-let incorrectLetters = []
-let userAttempts = 0
-let gameWon = false
-let fiveLetterWords = []
+let lettersGuessedCorrectly = [];
+let closeLettersGuesses = [];
+let incorrectLetters = [];
+let userAttempts = 0;
+let gameWon = false;
+let fiveLetterWords = [];
 let CurrentKeySelected;
+
+//Cookie Variables
+
+let wordsGuessed = [];
+let closeLettersCookies = closeLettersGuesses;
+let lettersGuessedCookies = lettersGuessedCorrectly;
+
+function clearAllCookies() {
+  // Get all cookies
+  const cookies = document.cookie.split(";");
+
+  // Loop through each cookie and clear it
+  for (let cookie of cookies) {
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+    // Set each cookie's expiration date to a past date
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+  }
+}
+
+
+function getSessionCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const [key, value] = cookies[i].trim().split('=');
+    if (key === name) {
+      return JSON.parse(value);
+    }
+  }
+  return null;
+}
+
+function setSessionCookie(name, value) {
+  console.log("IN")
+  document.cookie = `${name}=${JSON.stringify(value)}; path=/;`;
+}
+
+
+function initializeGameFromSession() {
+  const CorrectLetters = getSessionCookie("CorrectLettersCOOKIE")
+  const CloseLetters = getSessionCookie("CloseLettersCOOKIE")
+
+  CorrectLetters.forEach(element => {
+    element = element.toLowerCase()
+    document.querySelector(`.${element}`).classList.add("correct")
+  });
+
+  CloseLetters.forEach(element => {
+    element = element.toLowerCase()
+    document.querySelector(`.${element}`).classList.add("close")
+  });
+
+  
+} 
+  
+
 
 
 // Commonly used variables are stored at the top of the document so the program doesnt have to find each element every time you want it
-let restartButton = document.querySelector(".restart-game")
-const keyBoardButtons = document.querySelectorAll(".kletter")
-const guessAttemptText = document.querySelector(".congratsh2")
-const errorMessage = document.querySelector(".error-message")
-const wordReveal = document.querySelector(".word-reveal")
-const userWin = document.querySelector(".congrats")
+let restartButton = document.querySelector(".restart-game");
+const keyBoardButtons = document.querySelectorAll(".kletter");
+const guessAttemptText = document.querySelector(".congratsh2");
+const errorMessage = document.querySelector(".error-message");
+const wordReveal = document.querySelector(".word-reveal");
+const userWin = document.querySelector(".congrats");
 
 document.addEventListener('touchstart', function(e) {
   if (e.touches.length > 1) {
@@ -44,7 +101,6 @@ keyBoardButtons.forEach(button => {
       compareWords(enteredWord)
    } else if (button.textContent === "Back") {
     if (currentLetter === 0) {
-      console.log(currentLetter)
     } else {
       currentLetter--
     }
@@ -72,8 +128,6 @@ function isLetter(letter) {
 
 
 function gameWin() {
-  console.log(userAttempts)
-
   userWin.classList.add("visible")
 
   enteredWord = ["", "", "", "", ""]
@@ -87,6 +141,7 @@ function gameWin() {
   for (let i = 0; i < letters.length; i++) {
     letters[i].id = "NULL";
   }
+  clearAllCookies() 
 }
 
 //YOU LOSE FUNCTION
@@ -187,6 +242,9 @@ async function compareWords(usersWord) {
   console.log(closeLettersGuesses)
   console.log(lettersGuessedCorrectly)
 
+  setSessionCookie("CloseLettersCOOKIE", closeLettersGuesses)
+  setSessionCookie("CorrectLettersCOOKIE", lettersGuessedCorrectly)
+
   if (lettersGuessedCorrectly.length != 0) {
     lettersGuessedCorrectly.forEach(element => {
       element = element.toLowerCase()
@@ -195,7 +253,6 @@ async function compareWords(usersWord) {
   } 
   
   if (closeLettersGuesses.length > 0) {
-    console.log("INSIDE CLOSE LETTERS")
     for (i = 0; i < closeLettersGuesses.length; i++) {
       if (lettersGuessedCorrectly.includes(closeLettersGuesses[i]) === false)
         closeLettersGuesses.forEach(element => {
@@ -224,6 +281,8 @@ document.addEventListener('keydown', async function(event) {
     document.querySelector(".back").click()
     
   } else if (event.key === "Enter" && currentLetter === ANSWER_LENGTH) {
+    wordsGuessed.push(enteredWord.join(''))
+    console.log("WORD: ", wordsGuessed)
     compareWords(enteredWord)
 
   } else if (event.key === "Enter" && currentLetter < ANSWER_LENGTH) {
@@ -250,6 +309,8 @@ function MakeMap (array) {
   
   return obj
 }
+
+initializeGameFromSession()
 
 
 
