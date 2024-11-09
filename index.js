@@ -35,7 +35,11 @@ keyBoardButtons.forEach(button => {
    } else if (button.textContent === "Enter" && currentLetter === ANSWER_LENGTH && CurrentKeySelected != "Enter") {
       compareWords(enteredWord)
    } else if (button.textContent === "Back") {
-    currentLetter--
+    if (currentLetter === 0) {
+      console.log(currentLetter)
+    } else {
+      currentLetter--
+    }
     enteredWord[currentLetter] = ""
     document.getElementById(currentLetter).innerHTML = ""
    }
