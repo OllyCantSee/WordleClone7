@@ -229,7 +229,7 @@ body {
     }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 550px) {
     .kletter {
         width: 26px;
     }
@@ -244,9 +244,6 @@ body {
     .wordle-grid {
         margin-bottom: 2rem;
     }
-}
-
-@media only screen and (max-width: 400px) {
     .kletter {
         font-size: 1.1rem;
         flex: 2;
@@ -285,6 +282,7 @@ body {
         justify-content: center;
     }
 }
+
 
 @media only screen and (max-width: 300px) {
     .kletter {
