@@ -21,7 +21,15 @@ const errorMessage = document.querySelector(".error-message")
 const wordReveal = document.querySelector(".word-reveal")
 const userWin = document.querySelector(".congrats")
 
+document.addEventListener('touchstart', function(e) {
+  if (e.touches.length > 1) {
+      e.preventDefault();
+  }
+}, { passive: false });
 
+document.addEventListener('dblclick', function(e) {
+  e.preventDefault();
+})
 
 // When the keyboard is clicked, this is what handles the key presses
 keyBoardButtons.forEach(button => {
