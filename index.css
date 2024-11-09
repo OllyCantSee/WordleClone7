@@ -88,7 +88,6 @@ body {
 
 
 .wordle-title {
-    width: 100%;
     font-size: 2rem;
     color: white;
     display: flex;
@@ -188,7 +187,7 @@ body {
 
 .enter, .back {
     width: 70px;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-family: 'Righteous', sans-serif;
     font-weight: 100;
 }
@@ -273,6 +272,11 @@ body {
     .letter {
         width: 60px;
         height: 60px;
+    }
+
+    .navbar {
+        align-items: center;
+        justify-content: center;
     }
 }
 
