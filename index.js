@@ -53,6 +53,7 @@ function setSessionCookie(name, value) {
 function initializeGameFromSession() {
   const CorrectLetters = getSessionCookie("CorrectLettersCOOKIE")
   const CloseLetters = getSessionCookie("CloseLettersCOOKIE")
+  const IncorrectLetters = getSessionCookie("IncorrectLettersCOOKIE")
 
   CorrectLetters.forEach(element => {
     element = element.toLowerCase()
@@ -62,6 +63,11 @@ function initializeGameFromSession() {
   CloseLetters.forEach(element => {
     element = element.toLowerCase()
     document.querySelector(`.${element}`).classList.add("close")
+  });
+
+  IncorrectLetters.forEach(element => {
+    element = element.toLowerCase()
+    document.querySelector(`.${element}`).classList.add("wrong")
   });
 
   
@@ -244,6 +250,7 @@ async function compareWords(usersWord) {
 
   setSessionCookie("CloseLettersCOOKIE", closeLettersGuesses)
   setSessionCookie("CorrectLettersCOOKIE", lettersGuessedCorrectly)
+  setSessionCookie("IncorrectLettersCOOKIE", incorrectLetters)
 
   if (lettersGuessedCorrectly.length != 0) {
     lettersGuessedCorrectly.forEach(element => {
