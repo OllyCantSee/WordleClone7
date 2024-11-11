@@ -291,25 +291,13 @@ body {
 
 @media only screen and (max-width: 350px) {
     .kletter {
-        min-width: 12px;
+        min-width: 1px;
         height: 48px;
         font-size: 3vw;
     }
     .enter, .back {
-        min-width: 12px;
+        min-width: 1px;
         font-size: 0.6rem;
     }
-    .wordle-container {
-        width: 100%;
-        display: flex;
-    }
-    .wordle-grid {
-        width: 100%;
-    }
-    .keyboard {
-        position: fixed;
-        bottom: 0;
-    }
-    
 }
 
