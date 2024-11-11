@@ -259,8 +259,6 @@ body {
         align-items: center;
         padding: 0.3rem 0.3rem;
         gap: 2px;
-        position: fixed;
-        bottom: 0;
     }
 
     .row1, .row2, .row3 {
@@ -301,5 +299,10 @@ body {
         width: 52px;
         height: 52px;
     }
+    .keyboard {
+        position: fixed;
+        bottom: 0;
+    }
+    
 }
 
