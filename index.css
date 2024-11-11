@@ -16,8 +16,6 @@ body {
     font-family: 'Righteous', sans-serif;
     background-image: url(BackgroundImage.png);
     background-size: cover;
-    background-repeat: no-repeat;
-    background-position: bottom;
 }
 
 .wordle-grid {
@@ -284,11 +282,11 @@ body {
 }
 
 
-@media only screen and (max-width: 300px) {
+@media only screen and (max-width: 350px) {
     .kletter {
-        width: 20px;
-        height: 30px;
-        font-size: 0.65rem;
+        width: 18px;
+        height: 48px;
+        font-size: 0.9rem;
     }
     .enter, .back {
         width: 50px;
@@ -297,21 +295,9 @@ body {
     .wordle-grid {
         margin-bottom: 2rem;
     }
-}
-
-@media only screen and (max-width: 250px) {
-    .kletter {
-        width: 20px;
-        height: 54px;
-        font-size: 0.6rem;
-    }
-    .enter, .back {
-        width: 50px;
-        font-size: 0.6rem;
-    }
-    .wordle-grid {
-        margin-bottom: 2rem;
+    .letter {
+        width: 52px;
+        height: 52px;
     }
 }
-
 
