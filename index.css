@@ -289,7 +289,7 @@ body {
 }
 
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
     /* Make the wordle-container take up full width */
     .wordle-container {
         width: 100%;
@@ -346,7 +346,7 @@ body {
 
     /* Adjust special keys for better display on smaller screens */
     .enter, .back {
-        font-size: 0.7rem;
+        font-size: 4vw;
         width: 15vw;
         max-width: 70px;
         max-height: 10vh;
