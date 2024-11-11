@@ -282,14 +282,14 @@ body {
 }
 
 
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 400px) {
     .kletter {
-        width: 18px;
+        min-width: 12px;
         height: 48px;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
     .enter, .back {
-        width: 50px;
+        min-width: 12px;
         font-size: 0.6rem;
     }
     .wordle-grid {
