@@ -299,10 +299,13 @@ body {
         width: 52px;
         height: 52px;
     }
-    .keyboard {
+    
+}
+
+@media only screen and (max-width: 350px) {
+        .keyboard {
         position: fixed;
         bottom: 0;
     }
-    
 }
 
