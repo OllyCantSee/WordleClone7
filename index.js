@@ -1,9 +1,19 @@
+window.onload = async function() {
+  const res = await fetch("https://words.dev-apis.com/word-of-the-day")
+  const resObj = await res.json()
+  todaysWord = await resObj.word.toUpperCase()
+  todaysWordArray = Array.from(todaysWord)
+
+  initializeGameFromSession()
+}
+
+
 const ANSWER_LENGTH = 5;
 let inputIsLetter;
 let currentLetter = 0;
 let enteredWord = ["", "", "", "", ""];
 let todaysWord = ""
-let todaysWordArray = "";
+let todaysWordArray = [];
 let lettersGuessedCorrectly = [];
 let closeLettersGuesses = [];
 let incorrectLetters = [];
@@ -11,6 +21,7 @@ let userAttempts = 0;
 let gameWon = false;
 let fiveLetterWords = [];
 let CurrentKeySelected;
+let flag = true;
 
 //Cookie Variables
 
@@ -30,6 +41,12 @@ function clearAllCookies() {
     // Set each cookie's expiration date to a past date
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
   }
+
+  lettersGuessedCorrectly = [];
+  closeLettersGuesses = [];
+  incorrectLetters = [];
+  wordsGuessed = [];
+  userAttempts = 0;
 }
 
 
@@ -45,7 +62,11 @@ function getSessionCookie(name) {
 }
 
 function setSessionCookie(name, value) {
-  console.log("IN")
+  // Clean up any duplicate words (e.g., case insensitive)
+  if (name === "WordsGuessed") {
+    value = [...new Set(value.map(word => word.toUpperCase()))];
+  }
+  
   document.cookie = `${name}=${JSON.stringify(value)}; path=/;`;
 }
 
@@ -54,6 +75,16 @@ function initializeGameFromSession() {
   const CorrectLetters = getSessionCookie("CorrectLettersCOOKIE")
   const CloseLetters = getSessionCookie("CloseLettersCOOKIE")
   const IncorrectLetters = getSessionCookie("IncorrectLettersCOOKIE")
+  const CurrentAttempt = getSessionCookie("CurrentWord")
+  let WordsGuessed = getSessionCookie("WordsGuessed")
+
+  // Remove any duplicate entries (case-insensitive)
+  WordsGuessed = [...new Set(WordsGuessed.map(word => word.toUpperCase()))];
+  
+  lettersGuessedCorrectly = [...new Set([...lettersGuessedCorrectly, ...CorrectLetters])];
+  closeLettersGuesses = [...new Set([...closeLettersGuesses, ...CloseLetters])];
+  incorrectLetters = [...new Set([...incorrectLetters, ...IncorrectLetters])];
+  wordsGuessed = WordsGuessed;  // Now it's cleaned up
 
   CorrectLetters.forEach(element => {
     element = element.toLowerCase()
@@ -70,7 +101,38 @@ function initializeGameFromSession() {
     document.querySelector(`.${element}`).classList.add("wrong")
   });
 
+
+  for (let i = 0; i < wordsGuessed.length; i++) {
+
+    let currentArray = WordsGuessed[i].split("")
+    currentArray = currentArray.map(letter => letter.toUpperCase())
+    todaysWordArray = todaysWordArray.map(letter => letter.toUpperCase())
+    const map = MakeMap(todaysWordArray)
+
+    for (let x = 0; x < ANSWER_LENGTH; x++) {
+        document.getElementById(x).innerText = currentArray[x]
+      
+        if (todaysWordArray[x] === currentArray[x]) {
+          document.getElementById(x).classList.add("correct")
+          map[currentArray[x]]--;
+        }
+        if (todaysWordArray[x] !== currentArray[x] && todaysWordArray.includes(currentArray[x]) && map[currentArray[x]] > 0) {
+          document.getElementById(x).classList.add("close")
+          map[currentArray[x]]--;
+        }
+        if (todaysWordArray[x] !== currentArray[x] && !todaysWordArray.includes(currentArray[x])) {
+          document.getElementById(x).classList.add("wrong")
+        }
+        if (todaysWordArray[x] !== currentArray[x] && (map[currentArray[x]] === 0)) {
+          document.getElementById(x).classList.add("wrong")
+        }
   
+        document.getElementById(x).id = "NULL"
+    }
+    
+  }
+
+  userAttempts = CurrentAttempt;
 } 
   
 
@@ -120,13 +182,6 @@ keyBoardButtons.forEach(button => {
 })
 
 // When the page is loaded it will recieve the word of the day to stop delay on the first word
-window.onload = async function() {
-  const res = await fetch("https://words.dev-apis.com/word-of-the-day")
-  const resObj = await res.json()
-  todaysWord = await resObj.word.toUpperCase()
-  todaysWordArray = Array.from(todaysWord)
-}
-
 // Checks if the keyboards entry is letter and returns a boolean
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter)
@@ -147,6 +202,7 @@ function gameWin() {
   for (let i = 0; i < letters.length; i++) {
     letters[i].id = "NULL";
   }
+  
   clearAllCookies() 
 }
 
@@ -162,120 +218,121 @@ function gameLose() {
 
 //COMPARING WORDS
 async function compareWords(usersWord) {
-  let enteredWordString = usersWord.join('') 
-
-  
+  let enteredWordString = usersWord.join('');
   let res = await fetch("https://words.dev-apis.com/validate-word", {
     method: "POST",
-    body: JSON.stringify({word: enteredWordString})
-  })
+    body: JSON.stringify({ word: enteredWordString })
+  });
 
-  let resObj = await res.json()
+  let resObj = await res.json();
   let validWord = resObj.validWord;
 
-
   if (validWord === false) {
-    errorMessage.innerText = "Invalid Word"
-    errorMessage.classList.add("visible")
+    errorMessage.innerText = "Invalid Word";
+    errorMessage.classList.add("visible");
 
-    
-    setTimeout( () => {
-      errorMessage.classList.remove("visible")
-    }, 2000)
-    return
-
+    setTimeout(() => {
+      errorMessage.classList.remove("visible");
+    }, 2000);
+    return;
   } else {
-    userAttempts++
+    wordsGuessed.push(enteredWord.join(''))
+    setSessionCookie("WordsGuessed", wordsGuessed);
+    userAttempts++;
   }
 
+  todaysWordArray = todaysWordArray.map(letter => letter.toUpperCase());
+  usersWord = usersWord.map(letter => letter.toUpperCase());
 
-  todaysWordArray = todaysWordArray.map(letter => letter.toUpperCase())
-  usersWord = usersWord.map(letter1 => letter1.toUpperCase())
+  const map = MakeMap(todaysWordArray);
 
-  const map = MakeMap(todaysWordArray)
-
-  for (i = 0; i < ANSWER_LENGTH; i++) {
-    if(todaysWordArray[i] === usersWord[i]) {
-      document.getElementById(i).classList.add("correct")
-      map[usersWord[i]]--
-      lettersGuessedCorrectly.push(usersWord[i])
+  // Handle Correct letters
+  for (let i = 0; i < ANSWER_LENGTH; i++) {
+    if (todaysWordArray[i] === usersWord[i]) {
+      document.getElementById(i).classList.add("correct");
+      map[usersWord[i]]--; // Decrement only after correctly marking
+      lettersGuessedCorrectly.push(usersWord[i]);
     }
   }
 
-
-
-  for (i = 0; i < ANSWER_LENGTH; i++) {
-    if(todaysWordArray[i] === usersWord[i]) {
-      // DO NOTHING, WE ALREADY DID IT
-    } else if (todaysWordArray.includes(usersWord[i]) && map[usersWord[i]] > 0){
-      document.getElementById(i).classList.add("close")
-      map[usersWord[i]]--
-      closeLettersGuesses.push(usersWord[i].toUpperCase())
-    } else {
-      document.getElementById(i).classList.add("wrong")
-      incorrectLetters.push(usersWord[i])
-
-      incorrectLetters.forEach(element => {
-        element = element.toLowerCase()
-        document.querySelector(`.${element}`).classList.add("wrong")
-      });
+  // Handle Close letters
+  for (let i = 0; i < ANSWER_LENGTH; i++) {
+    if (todaysWordArray[i] !== usersWord[i] && todaysWordArray.includes(usersWord[i]) && map[usersWord[i]] > 0) {
+      document.getElementById(i).classList.add("close");
+      map[usersWord[i]]--;
+      closeLettersGuesses.push(usersWord[i].toUpperCase());
     }
   }
 
-  let correctLetter = 0
+  // Handle Incorrect letters
+  for (let i = 0; i < ANSWER_LENGTH; i++) {
+    if (todaysWordArray[i] !== usersWord[i] && !todaysWordArray.includes(usersWord[i])) {
+      document.getElementById(i).classList.add("wrong");
+      incorrectLetters.push(usersWord[i]);
+    }
+  }
 
-  for (i = 0; i < ANSWER_LENGTH; i++) {
+  // Check if the word is fully guessed
+  let correctLetter = 0;
+  for (let i = 0; i < ANSWER_LENGTH; i++) {
     if (usersWord[i] === todaysWordArray[i]) {
-      correctLetter++
+      correctLetter++;
     }
     if (correctLetter === 5) {
-      gameWon = true
-      gameWin()
+      gameWon = true;
+      gameWin();
     }
   }
 
-
-
-  for (i = 0; i < ANSWER_LENGTH; i++) {
-    document.getElementById(i).id = "NULL"
+  // After finishing the word comparison, reset the ids to prevent unwanted interactions
+  for (let i = 0; i < ANSWER_LENGTH; i++) {
+    document.getElementById(i).id = "NULL";
   }
 
+  // Check if the user has lost after 6 attempts
   if (userAttempts === 6 && gameWon === false) {
-    gameLose()
+    gameLose();
   }
 
 
-  console.log(closeLettersGuesses)
-  console.log(lettersGuessedCorrectly)
+  setSessionCookie("CloseLettersCOOKIE", [...new Set(closeLettersGuesses)]);
+  setSessionCookie("CorrectLettersCOOKIE", [...new Set(lettersGuessedCorrectly)]);
+  setSessionCookie("IncorrectLettersCOOKIE", [...new Set(incorrectLetters)]);
+  setSessionCookie("CurrentWord", userAttempts);
 
-  setSessionCookie("CloseLettersCOOKIE", closeLettersGuesses)
-  setSessionCookie("CorrectLettersCOOKIE", lettersGuessedCorrectly)
-  setSessionCookie("IncorrectLettersCOOKIE", incorrectLetters)
 
+  // Add any extra logic for guessed letters color updates (if needed)
   if (lettersGuessedCorrectly.length != 0) {
     lettersGuessedCorrectly.forEach(element => {
-      element = element.toLowerCase()
-      document.querySelector(`.${element}`).classList.add("correct")
+      element = element.toLowerCase();
+      document.querySelector(`.${element}`).classList.add("correct");
     });
-  } 
-  
-  if (closeLettersGuesses.length > 0) {
-    for (i = 0; i < closeLettersGuesses.length; i++) {
-      if (lettersGuessedCorrectly.includes(closeLettersGuesses[i]) === false)
-        closeLettersGuesses.forEach(element => {
-          element = element.toLowerCase()
-          document.querySelector(`.${element}`).classList.add("close")
-    });
-  }
   }
 
-  currentLetter = 0
-  correctLetter = 0
-  errorMessage.classList.remove("visible")
+  if (closeLettersGuesses.length > 0) {
+    closeLettersGuesses.forEach(element => {
+      if (!lettersGuessedCorrectly.includes(element)) {
+        element = element.toLowerCase();
+        document.querySelector(`.${element}`).classList.add("close");
+      }
+    });
+  }
+
+  // Reset the current letter index for the next round
+  currentLetter = 0;
+  correctLetter = 0;
+  errorMessage.classList.remove("visible");
+
+  return 1;
 }
 
 
+
 document.addEventListener('keydown', async function(event) {
+  if (flag) {
+    flag = false;
+  }
+
   inputIsLetter = isLetter(event.key)
   CurrentKeySelected = event.key
 
@@ -288,8 +345,6 @@ document.addEventListener('keydown', async function(event) {
     document.querySelector(".back").click()
     
   } else if (event.key === "Enter" && currentLetter === ANSWER_LENGTH) {
-    wordsGuessed.push(enteredWord.join(''))
-    console.log("WORD: ", wordsGuessed)
     compareWords(enteredWord)
 
   } else if (event.key === "Enter" && currentLetter < ANSWER_LENGTH) {
@@ -316,9 +371,5 @@ function MakeMap (array) {
   
   return obj
 }
-
-initializeGameFromSession()
-
-
 
 
