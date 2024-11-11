@@ -289,7 +289,7 @@ body {
 }
 
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 350px) {
     .kletter {
         min-width: 12px;
         height: 48px;
