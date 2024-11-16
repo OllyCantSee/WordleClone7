@@ -4,6 +4,16 @@ window.onload = async function() {
   todaysWord = await resObj.word.toUpperCase()
   todaysWordArray = Array.from(todaysWord)
 
+  let date = new Date()
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let user_current_day = `${day}-${month}-${year}`;
+  setSessionCookie("LastLoginDate", user_current_day);
+
+  checkTodaysDate()
   initializeGameFromSession()
 }
 
@@ -28,6 +38,24 @@ let flag = true;
 let wordsGuessed = [];
 let closeLettersCookies = closeLettersGuesses;
 let lettersGuessedCookies = lettersGuessedCorrectly;
+
+
+function checkTodaysDate() {
+  let date = new Date()
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let user_current_day = `${day}-${month}-${year}`;
+  if (getSessionCookie("LastLoginDate") < user_current_day) {
+    clearAllCookies()
+  }
+
+  console.log("user_current_day" ,user_current_day)
+  console.log("Session Cookie" ,getSessionCookie("LastLoginDate"))
+}
+
 
 function clearAllCookies() {
   // Get all cookies
